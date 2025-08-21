@@ -1,12 +1,16 @@
 # 📈 Stock Price Dashboard
 
-A beautiful, responsive stock price dashboard built with React, Tailwind CSS, and Recharts. This application displays real-time stock market data in both table and chart formats with advanced features like search, sorting, and error handling.
+A beautiful, responsive stock price dashboard built with React, CSS, and Recharts. This application displays real-time stock market data in both table and chart formats with advanced features like search, sorting, and error handling.
+
+## 🌐 Live Demo
+
+**🚀 [View Live Application](https://stock-dashboard-made-by-ahmad.netlify.app/)**
 
 ## ✨ Features
 
 ### Core Requirements ✅
 - **Stock Data Table**: Displays symbol, price, change %, and volume
-- **Responsive Design**: Built with Tailwind CSS for mobile-first design
+- **Responsive Design**: Built with modern CSS for mobile-first design
 - **Real-time Data**: Fetches stock information (currently using sample data)
 - **Beautiful UI**: Modern gradient design with glassmorphism effects
 
@@ -25,7 +29,7 @@ A beautiful, responsive stock price dashboard built with React, Tailwind CSS, an
 ## 🛠️ Technologies Used
 
 - **React 18** - Modern React with hooks
-- **Tailwind CSS** - Utility-first CSS framework
+- **CSS3** - Custom styling with animations and responsive design
 - **Recharts** - Beautiful chart library
 - **React Icons** - Icon library
 - **Axios** - HTTP client (ready for API integration)
@@ -101,14 +105,15 @@ const response = await axios.get(`https://finnhub.io/api/v1/quote?symbol=AAPL&to
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+### Netlify (Current Deployment)
+The application is currently deployed on Netlify:
+- **Live URL**: [https://stock-dashboard-made-by-ahmad.netlify.app/](https://stock-dashboard-made-by-ahmad.netlify.app/)
+- **Admin Panel**: [https://app.netlify.com/projects/stock-dashboard-made-by-ahmad](https://app.netlify.com/projects/stock-dashboard-made-by-ahmad)
+
+### Vercel
 1. Push your code to GitHub
 2. Connect your repository to Vercel
 3. Deploy automatically
-
-### Netlify
-1. Build the project: `npm run build`
-2. Upload the `build` folder to Netlify
 
 ### GitHub Pages
 1. Add `"homepage": "https://yourusername.github.io/stock-dashboard"` to package.json
@@ -144,3 +149,15 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ---
 
 **Note**: This is a demonstration project. For production use, please integrate with a real stock market API and implement proper error handling and rate limiting.
+
+## 📞 Support
+
+If you encounter any issues:
+1. Check the browser console for errors
+2. Verify all dependencies are installed
+3. Ensure Node.js version is 14+
+4. Check API rate limits if using real data
+
+---
+
+**🎉 Live Demo**: [https://stock-dashboard-made-by-ahmad.netlify.app/](https://stock-dashboard-made-by-ahmad.netlify.app/)
