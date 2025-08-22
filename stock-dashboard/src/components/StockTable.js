@@ -1,72 +1,105 @@
 import React from 'react';
-import { FaSort, FaSortUp, FaSortDown, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 
 const StockTable = ({ stocks, onSort, sortConfig }) => {
-  const formatNumber = (num) => {
-    return new Intl.NumberFormat('en-US').format(num);
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return <FaSort className="text-gray-400" />;
+    return sortConfig.direction === 'asc' 
+      ? <FaSortUp className="text-blue-400" /> 
+      : <FaSortDown className="text-blue-400" />;
   };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 2
     }).format(price);
   };
 
-  const getSortIcon = (key) => {
-    if (sortConfig.key !== key) return <FaSort style={{ color: '#9ca3af' }} />;
-    return sortConfig.direction === 'asc' 
-      ? <FaSortUp style={{ color: '#3b82f6' }} /> 
-      : <FaSortDown style={{ color: '#3b82f6' }} />;
+  const formatVolume = (volume) => {
+    return new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      maximumFractionDigits: 1
+    }).format(volume);
   };
 
   const getChangeColor = (change) => {
-    return change >= 0 ? 'positive' : 'negative';
+    if (change > 0) return 'text-green-400';
+    if (change < 0) return 'text-red-400';
+    return 'text-gray-300';
   };
 
   const getChangeIcon = (change) => {
-    return change >= 0 ? <FaArrowUp /> : <FaArrowDown />;
+    if (change > 0) return '↗';
+    if (change < 0) return '↘';
+    return '→';
   };
 
+  if (stocks.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-gray-400 text-lg mb-2">No stocks found</div>
+        <div className="text-gray-500 text-sm">Try adjusting your search criteria</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="table-container">
-      <table className="stock-table">
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[600px]">
         <thead>
-          <tr>
-            <th onClick={() => onSort('symbol')}>
-              <div className="sort-content">
+          <tr className="border-b border-white/20">
+            <th 
+              className="table-header cursor-pointer hover:bg-white/10 transition-colors duration-200"
+              onClick={() => onSort('symbol')}
+            >
+              <div className="flex items-center gap-2">
                 Symbol
                 {getSortIcon('symbol')}
               </div>
             </th>
-            <th onClick={() => onSort('name')}>
-              <div className="sort-content">
-                Company Name
+            <th 
+              className="table-header cursor-pointer hover:bg-white/10 transition-colors duration-200"
+              onClick={() => onSort('name')}
+            >
+              <div className="flex items-center gap-2">
+                Company
                 {getSortIcon('name')}
               </div>
             </th>
-            <th onClick={() => onSort('price')}>
-              <div className="sort-content">
+            <th 
+              className="table-header cursor-pointer hover:bg-white/10 transition-colors duration-200"
+              onClick={() => onSort('price')}
+            >
+              <div className="flex items-center gap-2">
                 Price
                 {getSortIcon('price')}
               </div>
             </th>
-            <th onClick={() => onSort('change')}>
-              <div className="sort-content">
+            <th 
+              className="table-header cursor-pointer hover:bg-white/10 transition-colors duration-200"
+              onClick={() => onSort('change')}
+            >
+              <div className="flex items-center gap-2">
                 Change
                 {getSortIcon('change')}
               </div>
             </th>
-            <th onClick={() => onSort('changePercent')}>
-              <div className="sort-content">
+            <th 
+              className="table-header cursor-pointer hover:bg-white/10 transition-colors duration-200"
+              onClick={() => onSort('changePercent')}
+            >
+              <div className="flex items-center gap-2">
                 Change %
                 {getSortIcon('changePercent')}
               </div>
             </th>
-            <th onClick={() => onSort('volume')}>
-              <div className="sort-content">
+            <th 
+              className="table-header cursor-pointer hover:bg-white/10 transition-colors duration-200"
+              onClick={() => onSort('volume')}
+            >
+              <div className="flex items-center gap-2">
                 Volume
                 {getSortIcon('volume')}
               </div>
@@ -75,39 +108,46 @@ const StockTable = ({ stocks, onSort, sortConfig }) => {
         </thead>
         <tbody>
           {stocks.map((stock, index) => (
-            <tr key={stock.symbol}>
-              <td>
-                <div className="stock-symbol">
-                  <div className="symbol-avatar">
+            <tr 
+              key={stock.symbol} 
+              className={`border-b border-white/10 hover:bg-white/5 transition-colors duration-200 ${
+                index % 2 === 0 ? 'bg-white/5' : ''
+              }`}
+            >
+              <td className="table-cell">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center text-white font-bold text-xs">
                     {stock.symbol.charAt(0)}
                   </div>
-                  {stock.symbol}
+                  <div>
+                    <div className="font-semibold text-white">{stock.symbol}</div>
+                  </div>
                 </div>
               </td>
-              <td>{stock.name}</td>
-              <td style={{ fontWeight: '600' }}>{formatPrice(stock.price)}</td>
-              <td>
-                <div className={`price-change ${getChangeColor(stock.change)}`}>
-                  {getChangeIcon(stock.change)}
-                  {formatPrice(Math.abs(stock.change))}
+              <td className="table-cell">
+                <div className="text-white">{stock.name}</div>
+              </td>
+              <td className="table-cell">
+                <div className="font-semibold text-white">{formatPrice(stock.price)}</div>
+              </td>
+              <td className="table-cell">
+                <div className={`flex items-center gap-1 font-medium ${getChangeColor(stock.change)}`}>
+                  <span>{getChangeIcon(stock.change)}</span>
+                  <span>{formatPrice(Math.abs(stock.change))}</span>
                 </div>
               </td>
-              <td>
-                <span className={`change-badge ${getChangeColor(stock.changePercent)}`}>
-                  {stock.changePercent >= 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+              <td className="table-cell">
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-white/10 ${getChangeColor(stock.change)}`}>
+                  {stock.change > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
                 </span>
               </td>
-              <td>{formatNumber(stock.volume)}</td>
+              <td className="table-cell">
+                <div className="text-gray-300">{formatVolume(stock.volume)}</div>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      
-      {stocks.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>
-          <p>No stocks found matching your search criteria.</p>
-        </div>
-      )}
     </div>
   );
 };

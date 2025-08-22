@@ -4,7 +4,8 @@ import StockChart from './components/StockChart';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import SearchBar from './components/SearchBar';
-import { FaChartLine, FaTable, FaRedo } from 'react-icons/fa';
+import { FaRedo, FaTable, FaChartBar } from 'react-icons/fa';
+import { fetchStockData } from './services/api';
 
 function App() {
   const [stocks, setStocks] = useState([]);
@@ -14,138 +15,141 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-  const sampleStocks = [
-    { symbol: 'AAPL', name: 'Apple Inc.', price: 150.25, change: 2.15, changePercent: 1.45, volume: 45678900 },
-    { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 2750.80, change: -15.20, changePercent: -0.55, volume: 23456700 },
-    { symbol: 'MSFT', name: 'Microsoft Corporation', price: 310.45, change: 8.75, changePercent: 2.90, volume: 34567800 },
-    { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 3200.00, change: 45.30, changePercent: 1.44, volume: 56789000 },
-    { symbol: 'TSLA', name: 'Tesla Inc.', price: 850.75, change: -25.50, changePercent: -2.91, volume: 67890100 },
-    { symbol: 'META', name: 'Meta Platforms Inc.', price: 320.60, change: 12.40, changePercent: 4.03, volume: 45678900 },
-    { symbol: 'NVDA', name: 'NVIDIA Corporation', price: 450.25, change: 18.75, changePercent: 4.35, volume: 34567800 },
-    { symbol: 'NFLX', name: 'Netflix Inc.', price: 580.90, change: -8.20, changePercent: -1.39, volume: 23456700 },
-  ];
-
   useEffect(() => {
-    fetchStockData();
+    fetchStockData()
+      .then(data => {
+        setStocks(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
   }, []);
 
-  const fetchStockData = async () => {
+  const handleRefresh = () => {
     setLoading(true);
     setError(null);
-    
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setStocks(sampleStocks);
-    } catch (err) {
-      setError('Failed to fetch stock data. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
+    fetchStockData()
+      .then(data => {
+        setStocks(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
   };
-
-  const handleRefresh = () => {
-    fetchStockData();
-  };
-
-  const filteredStocks = stocks.filter(stock =>
-    stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    stock.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const sortedStocks = [...filteredStocks].sort((a, b) => {
-    if (!sortConfig.key) return 0;
-    
-    const aValue = a[sortConfig.key];
-    const bValue = b[sortConfig.key];
-    
-    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-    return 0;
-  });
 
   const handleSort = (key) => {
-    setSortConfig(prevConfig => ({
-      key,
-      direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
-    }));
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
 
+  const filteredAndSortedStocks = stocks
+    .filter(stock =>
+      stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      stock.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (!sortConfig.key) return 0;
+      
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+      
+      if (typeof aValue === 'string') {
+        return sortConfig.direction === 'asc' 
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+      
+      return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+    });
+
   if (loading) {
-    return (
-      <div className="loading-container">
-        <LoadingSpinner />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
-    return (
-      <div className="loading-container">
-        <ErrorMessage message={error} onRetry={fetchStockData} />
-      </div>
-    );
+    return <ErrorMessage message={error} onRetry={handleRefresh} />;
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="container">
-        <div className="header">
-          <h1>📈 Stock Price Dashboard</h1>
-          <p>Real-time stock market data and analytics</p>
-        </div>
+    <div className="min-h-screen bg-gradient-primary">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <header className="text-center mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 text-shadow">
+            📈 Stock Dashboard
+          </h1>
+          <p className="text-gray-200 text-lg">
+            Real-time stock market data and analytics
+          </p>
+        </header>
 
-        <div className="controls">
-          <div className="controls-content">
+        <div className="card p-4 md:p-6 mb-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <SearchBar 
-              value={searchTerm} 
-              onChange={setSearchTerm} 
-              placeholder="Search stocks by symbol or name..."
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search stocks..."
             />
             
-            <div className="controls-row">
-              <div className="view-toggle">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex bg-white/20 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('table')}
-                  className={`view-button ${viewMode === 'table' ? 'active' : ''}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    viewMode === 'table'
+                      ? 'bg-white text-gray-800'
+                      : 'text-white hover:bg-white/10'
+                  }`}
                 >
                   <FaTable />
                   Table
                 </button>
                 <button
                   onClick={() => setViewMode('chart')}
-                  className={`view-button ${viewMode === 'chart' ? 'active' : ''}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    viewMode === 'chart'
+                      ? 'bg-white text-gray-800'
+                      : 'text-white hover:bg-white/10'
+                  }`}
                 >
-                  <FaChartLine />
-                  Chart
+                  <FaChartBar />
+                  Charts
                 </button>
               </div>
-
+              
               <button
                 onClick={handleRefresh}
-                className="refresh-button"
+                className="btn-primary flex items-center justify-center gap-2"
               >
-                <FaRedo />
+                <FaRedo className="text-sm" />
                 Refresh
               </button>
             </div>
           </div>
         </div>
 
-        <div className="main-content">
+        <main className="card p-4 md:p-6">
           {viewMode === 'table' ? (
             <StockTable 
-              stocks={sortedStocks} 
+              stocks={filteredAndSortedStocks}
               onSort={handleSort}
               sortConfig={sortConfig}
             />
           ) : (
-            <StockChart stocks={sortedStocks} />
+            <StockChart stocks={filteredAndSortedStocks} />
           )}
-        </div>
+        </main>
 
-        <div className="footer">
-          <p>Data is for demonstration purposes. In production, connect to a real stock API.</p>
-        </div>
+        <footer className="text-center mt-8 text-gray-300 text-sm">
+          <p>Stock data for demonstration purposes</p>
+          <p className="mt-1">Built with React, Tailwind CSS, and Recharts</p>
+        </footer>
       </div>
     </div>
   );

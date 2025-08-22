@@ -1,6 +1,6 @@
 # 📈 Stock Price Dashboard
 
-A responsive stock price dashboard built with React, CSS, and Recharts. Displays stock market data in table and chart formats with search, sorting, and interactive features.
+A responsive stock price dashboard built with React, Tailwind CSS, and Recharts. Displays stock market data in table and chart formats with search, sorting, and interactive features.
 
 ## 🌐 Live Demo
 
@@ -10,7 +10,7 @@ A responsive stock price dashboard built with React, CSS, and Recharts. Displays
 
 ### Core Requirements ✅
 - Stock data table with symbol, price, change %, volume
-- Responsive design with modern CSS
+- Responsive design with Tailwind CSS
 - Real-time data fetching (sample data)
 - Modern UI with gradient design
 
@@ -26,7 +26,7 @@ A responsive stock price dashboard built with React, CSS, and Recharts. Displays
 ## 🛠️ Technologies
 
 - React 18
-- CSS3 with animations
+- Tailwind CSS
 - Recharts for data visualization
 - React Icons
 - Axios for API calls
@@ -82,7 +82,7 @@ const response = await axios.get(`https://finnhub.io/api/v1/quote?symbol=AAPL&to
 
 ## 📱 Responsive
 
-Optimized for desktop, tablet, and mobile devices.
+Optimized for desktop, tablet, and mobile devices using Tailwind CSS responsive utilities.
 
 ## 📄 License
 

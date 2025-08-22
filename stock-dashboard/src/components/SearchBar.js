@@ -1,25 +1,27 @@
 import React from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaTimes } from 'react-icons/fa';
 
 const SearchBar = ({ value, onChange, placeholder }) => {
+  const handleClear = () => {
+    onChange('');
+  };
+
   return (
-    <div className="search-container">
-      <FaSearch className="search-icon" />
+    <div className="relative w-full">
+      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="search-input"
+        className="input-field pl-10 pr-10"
       />
       {value && (
         <button
-          onClick={() => onChange('')}
-          className="clear-button"
+          onClick={handleClear}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-200"
         >
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <FaTimes className="text-sm" />
         </button>
       )}
     </div>

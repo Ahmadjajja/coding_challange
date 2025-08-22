@@ -191,4 +191,25 @@ export const stockAPI = {
   }
 };
 
+export const fetchStockData = async () => {
+  try {
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    const sampleData = [
+      { symbol: 'AAPL', name: 'Apple Inc.', price: 150.25, change: 2.15, changePercent: 1.45, volume: 45678900 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 2750.80, change: -15.20, changePercent: -0.55, volume: 23456700 },
+      { symbol: 'MSFT', name: 'Microsoft Corporation', price: 310.45, change: 8.75, changePercent: 2.90, volume: 34567800 },
+      { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 3200.00, change: 45.30, changePercent: 1.44, volume: 56789000 },
+      { symbol: 'TSLA', name: 'Tesla Inc.', price: 850.75, change: -25.50, changePercent: -2.91, volume: 67890100 },
+      { symbol: 'META', name: 'Meta Platforms Inc.', price: 320.60, change: 12.40, changePercent: 4.03, volume: 45678900 },
+      { symbol: 'NVDA', name: 'NVIDIA Corporation', price: 450.25, change: 18.75, changePercent: 4.35, volume: 34567800 },
+      { symbol: 'NFLX', name: 'Netflix Inc.', price: 580.90, change: -8.20, changePercent: -1.39, volume: 23456700 },
+    ];
+    
+    return sampleData;
+  } catch (error) {
+    throw new Error('Failed to fetch stock data. Please try again later.');
+  }
+};
+
 export default stockAPI;
