@@ -33,7 +33,6 @@ const StockChart = ({ stocks }) => {
     '#8B5CF6', '#06B6D4', '#84CC16', '#F97316'
   ];
 
-  // Check if stocks array is empty
   if (!stocks || stocks.length === 0) {
     return (
       <div style={{ 
@@ -53,7 +52,6 @@ const StockChart = ({ stocks }) => {
     );
   }
 
-  // Prepare data for different chart types
   const barChartData = stocks.map(stock => ({
     symbol: stock.symbol,
     price: stock.price,
@@ -93,12 +91,10 @@ const StockChart = ({ stocks }) => {
     return null;
   };
 
-  // Calculate average price safely
   const averagePrice = stocks.length > 0 
     ? stocks.reduce((sum, stock) => sum + stock.price, 0) / stocks.length 
     : 0;
 
-  // Find best performer safely
   const bestPerformer = stocks.length > 0 
     ? stocks.reduce((best, stock) => 
         stock.changePercent > best.changePercent ? stock : best
@@ -107,7 +103,6 @@ const StockChart = ({ stocks }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Price Bar Chart */}
       <div className="chart-section">
         <h3 className="chart-title">Stock Prices</h3>
         <div className="chart-container">
@@ -135,7 +130,6 @@ const StockChart = ({ stocks }) => {
         </div>
       </div>
 
-      {/* Change Percentage Line Chart */}
       <div className="chart-section">
         <h3 className="chart-title">Price Change Percentage</h3>
         <div className="chart-container">
@@ -166,7 +160,6 @@ const StockChart = ({ stocks }) => {
         </div>
       </div>
 
-      {/* Market Share Pie Chart */}
       <div className="chart-section">
         <h3 className="chart-title">Market Activity (by Change %)</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -243,7 +236,6 @@ const StockChart = ({ stocks }) => {
         </div>
       </div>
 
-      {/* Summary Stats */}
       <div className="summary-stats">
         <div className="stat-card">
           <p className="stat-label">Total Stocks</p>

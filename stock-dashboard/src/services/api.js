@@ -1,31 +1,25 @@
 import axios from 'axios';
 
-// API Configuration
 const API_CONFIG = {
-  // Alpha Vantage API (Free tier: 5 calls per minute, 500 per day)
   ALPHA_VANTAGE: {
     baseURL: 'https://www.alphavantage.co/query',
     apiKey: process.env.REACT_APP_ALPHA_VANTAGE_API_KEY || 'demo',
   },
   
-  // Finnhub API (Free tier: 60 calls per minute)
   FINNHUB: {
     baseURL: 'https://finnhub.io/api/v1',
     apiKey: process.env.REACT_APP_FINNHUB_API_KEY || 'demo',
   },
   
-  // Yahoo Finance API (Free, no key required)
   YAHOO_FINANCE: {
     baseURL: 'https://query1.finance.yahoo.com/v8/finance/chart',
   }
 };
 
-// Sample stock symbols for demonstration
 const SAMPLE_STOCKS = [
   'AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX'
 ];
 
-// Alpha Vantage API Service
 export const alphaVantageAPI = {
   async getStockQuote(symbol) {
     try {
@@ -52,7 +46,7 @@ export const alphaVantageAPI = {
         change: parseFloat(quote['09. change']),
         changePercent: parseFloat(quote['10. change percent'].replace('%', '')),
         volume: parseInt(quote['06. volume']),
-        name: quote['01. symbol'], // Alpha Vantage doesn't provide company name in quote
+        name: quote['01. symbol'],
       };
     } catch (error) {
       console.error(`Error fetching ${symbol} from Alpha Vantage:`, error);
@@ -75,7 +69,6 @@ export const alphaVantageAPI = {
   }
 };
 
-// Finnhub API Service
 export const finnhubAPI = {
   async getStockQuote(symbol) {
     try {
@@ -96,7 +89,7 @@ export const finnhubAPI = {
         change: response.data.d,
         changePercent: response.data.dp,
         volume: response.data.v,
-        name: symbol, // Finnhub doesn't provide company name in quote
+        name: symbol,
       };
     } catch (error) {
       console.error(`Error fetching ${symbol} from Finnhub:`, error);
@@ -119,7 +112,6 @@ export const finnhubAPI = {
   }
 };
 
-// Yahoo Finance API Service
 export const yahooFinanceAPI = {
   async getStockQuote(symbol) {
     try {
@@ -145,7 +137,7 @@ export const yahooFinanceAPI = {
         change: change,
         changePercent: changePercent,
         volume: quote.volume[quote.volume.length - 1] || 0,
-        name: symbol, // Yahoo Finance doesn't provide company name in this endpoint
+        name: symbol,
       };
     } catch (error) {
       console.error(`Error fetching ${symbol} from Yahoo Finance:`, error);
@@ -168,13 +160,10 @@ export const yahooFinanceAPI = {
   }
 };
 
-// Default API service (currently using sample data)
 export const stockAPI = {
   async getStockQuote(symbol) {
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Return sample data for demonstration
     const sampleData = {
       'AAPL': { symbol: 'AAPL', name: 'Apple Inc.', price: 150.25, change: 2.15, changePercent: 1.45, volume: 45678900 },
       'GOOGL': { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 2750.80, change: -15.20, changePercent: -0.55, volume: 23456700 },
@@ -202,5 +191,4 @@ export const stockAPI = {
   }
 };
 
-// Export the default API service
 export default stockAPI;

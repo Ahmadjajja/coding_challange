@@ -10,11 +10,10 @@ function App() {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [viewMode, setViewMode] = useState('table'); // 'table' or 'chart'
+  const [viewMode, setViewMode] = useState('table');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-  // Sample stock data (in real app, this would come from API)
   const sampleStocks = [
     { symbol: 'AAPL', name: 'Apple Inc.', price: 150.25, change: 2.15, changePercent: 1.45, volume: 45678900 },
     { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 2750.80, change: -15.20, changePercent: -0.55, volume: 23456700 },
@@ -28,20 +27,14 @@ function App() {
 
   useEffect(() => {
     fetchStockData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchStockData = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // In a real application, you would fetch from an API like:
-      // const response = await axios.get('https://api.example.com/stocks');
-      // setStocks(response.data);
-      
       setStocks(sampleStocks);
     } catch (err) {
       setError('Failed to fetch stock data. Please try again later.');
@@ -96,13 +89,11 @@ function App() {
   return (
     <div className="min-h-screen">
       <div className="container">
-        {/* Header */}
         <div className="header">
           <h1>📈 Stock Price Dashboard</h1>
           <p>Real-time stock market data and analytics</p>
         </div>
 
-        {/* Controls */}
         <div className="controls">
           <div className="controls-content">
             <SearchBar 
@@ -111,8 +102,7 @@ function App() {
               placeholder="Search stocks by symbol or name..."
             />
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              {/* View Mode Toggle */}
+            <div className="controls-row">
               <div className="view-toggle">
                 <button
                   onClick={() => setViewMode('table')}
@@ -130,7 +120,6 @@ function App() {
                 </button>
               </div>
 
-              {/* Refresh Button */}
               <button
                 onClick={handleRefresh}
                 className="refresh-button"
@@ -142,7 +131,6 @@ function App() {
           </div>
         </div>
 
-        {/* Content */}
         <div className="main-content">
           {viewMode === 'table' ? (
             <StockTable 
@@ -155,7 +143,6 @@ function App() {
           )}
         </div>
 
-        {/* Footer */}
         <div className="footer">
           <p>Data is for demonstration purposes. In production, connect to a real stock API.</p>
         </div>
